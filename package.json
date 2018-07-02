@@ -23,5 +23,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "homepage": "http://rabbid.lt.palija.serveriai.lt/population/",
+  "description": ""
 }

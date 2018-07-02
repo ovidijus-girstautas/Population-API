@@ -1,20 +1,25 @@
 import axios from 'axios';
 
 export function fetchCountryList() {
-    return function (dispatch) {
-        axios.get('http://api.population.io/1.0/countries')
-            .then((response) => {
-                dispatch({
-                    type: 'GET_COUNTRIES',
-                    payload: response.data
+    return async function (dispatch) {
+        try{
+            axios.get('http://api.population.io/1.0/countries')
+                .then((response) => {
+                    dispatch({
+                        type: 'GET_COUNTRIES',
+                        payload: response.data
+                    })
                 })
-            })
-            .then(()=>{
-                dispatch({
-                    type: 'REMOVE_AUSTRALIA',
-                    payload: 12
+                .then(() => {
+                    dispatch({
+                        type: 'REMOVE_AUSTRALIA',
+                        payload: 12
+                    })
                 })
-            })
+        } catch (err) {
+            console.log('try failed');
+        }
+        
     }
 }
 
