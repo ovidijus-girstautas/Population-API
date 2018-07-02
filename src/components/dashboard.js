@@ -177,7 +177,14 @@ class Dashboard extends React.Component {
                                     display: false
                                 },
                                 responsive: true,
-                                maintainAspectRatio: false
+                                maintainAspectRatio: false,
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
                             }}
                         />
                     </div> : null}
