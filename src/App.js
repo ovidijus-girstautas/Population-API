@@ -1,6 +1,8 @@
 import React from 'react';
 import Dashboard from './components/dashboard';
 import Report from './components/report';
+import './style/main.scss';
+
 
 class App extends React.Component {
 

@@ -118,6 +118,7 @@ class Dashboard extends React.Component {
         const top = this.state.top.map((country, i)=>{
             return(
                 <tr key={country.country}>
+                    <td style={{paddingLeft: '20px'}}> {i + 1}</td>
                     <td> {country.country}</td>
                     <td>{country.population}</td>
                 </tr>
@@ -125,51 +126,62 @@ class Dashboard extends React.Component {
         })
 
         return (
-                <div className='wrapper'>
+                <div className='dashboard-wrapper'>
                     <div className='main'>
                         <table className='top-countries'>
                             <tbody>
                                 <tr>
+                                    <th>Rank</th>
                                     <th>Country</th>
                                     <th>Population</th>
                                 </tr>
                             {top}
                             </tbody>
                         </table> 
-                    <h1>Most males compared to females are in - {this.state.rankOne[0].country}.</h1>
+                    {this.state.chartData ? <div className="chart-dashboard">
+                        <Bar
+                            data={this.state.chartData}
+                            height={400}
+                            options={{
+                                title: {
+                                    display: true,
+                                    text: 'Top 10 Countries by Population',
+                                    fontSize: 15,
+                                    fontColor: 'white'
+                                },
+                                legend: {
+                                    display: false
+                                },
+                                responsive: true,
+                                maintainAspectRatio: false
+                            }}
+                        />
+                    </div> : null}
                     </div>
-                {this.state.chartData && this.state.mostData ? <div className="chart-dashboard">
-                    <Bar
-                        data={this.state.chartData}
-                        height={400}
-                        options={{
-                            title: {
-                                display: true,
-                                text: 'Top 10 Countries by Population',
-                                fontSize: 15,
-                                fontColor: 'white'
-                            },
-                            legend: {
-                                display: false
-                            }
-                        }}
-                    />
-                    <Bar
-                        data={this.state.mostData}
-                        height={400}
-                        options={{
-                            title: {
-                                display: true,
-                                text: 'Most Males',
-                                fontSize: 15,
-                                fontColor: 'white'
-                            },
-                            legend: {
-                                display: false
-                            }
-                        }}
-                    />
-                </div> : null}
+
+                <div className='main'>
+                    <h1>{this.state.rankOne[0].country}</h1>
+                    <h1>Humam Sex Ratio of {this.state.rankOne[0].disparity}</h1>
+                    {this.state.mostData ? <div className="chart-dashboard">
+                        <Bar
+                            data={this.state.mostData}
+                            height={400}
+                            options={{
+                                title: {
+                                    display: true,
+                                    text: 'Most Males',
+                                    fontSize: 15,
+                                    fontColor: 'white'
+                                },
+                                legend: {
+                                    display: false
+                                },
+                                responsive: true,
+                                maintainAspectRatio: false
+                            }}
+                        />
+                    </div> : null}
+                </div>
                 </div>
         );
     }

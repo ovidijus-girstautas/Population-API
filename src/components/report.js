@@ -123,7 +123,9 @@ class Report extends React.Component {
                                 text: this.state.country +' - Population by gender',
                                 fontSize: 15,
                                 fontColor: 'white'
-                            }
+                            },
+                            responsive: true,
+                            maintainAspectRatio: false
                         }}
                     />
                 </div> : null}
