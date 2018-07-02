@@ -14,14 +14,13 @@ class Report extends React.Component {
     }
 
     componentDidMount(){
-        fetch(this.props.fetchCountryList())
-            .then(res => {
-                if (res) this.getPopulation()
-            })
+        this.props.fetchCountryList();
+        this.getPopulation();
     }
 
     getPopulation(){
 
+        this.props.fetchCountryList()
         //Current Time
         var today = new Date();
         var dd = today.getDate();
@@ -31,21 +30,24 @@ class Report extends React.Component {
         if (mm < 10) {mm = '0' + mm}
         today = yyyy + '-' + mm + '-' + dd;
 
-        let promiseArray = this.props.countries.map(country => axios.get('http://api.population.io/1.0/population/' + country + '/' + today +'/'));
-        Promise.all(promiseArray)
-            .then(
-            results => {
-                const ignore = ['ASIA', 'AFRICA', 'EUROPE', 'World', "Less developed regions", "Less developed regions, excluding China", "Less developed regions, excluding least developed countries", 'Least developed countries', 'More developed regions', 'LATIN AMERICA AND THE CARIBBEAN', 'NORTHERN AMERICA', 'South-Central Asia', 'Southern Asia', 'Eastern Asia', 'Sub-Saharan Africa', 'South-Eastern Asia', 'South America', 'Eastern Africa', 'Western Africa', 'Eastern Europe', 'Western Asia', 'Northern Africa', 'Western Europe', 'Central America', 'Middle Africa', 'Southern Europe', 'Northern Europe', 'Central Asia', 'Southern Africa', 'South Africa', 'OCEANIA']
-                const countries = [];
-                const country = this.props.countries.map((list,i)=>{
-                    if (!_.includes(ignore, list)){
-                        const obj = { country: list, population: results[i].data.total_population.population }
-                        countries.push(obj)
+        setTimeout(() => {
+            let promiseArray = this.props.countries.map(country => axios.get('http://api.population.io/1.0/population/' + country + '/' + today + '/'));
+            Promise.all(promiseArray)
+                .then(
+                    results => {
+                        const ignore = ['ASIA', 'AFRICA', 'EUROPE', 'World', "Less developed regions", "Less developed regions, excluding China", "Less developed regions, excluding least developed countries", 'Least developed countries', 'More developed regions', 'LATIN AMERICA AND THE CARIBBEAN', 'NORTHERN AMERICA', 'South-Central Asia', 'Southern Asia', 'Eastern Asia', 'Sub-Saharan Africa', 'South-Eastern Asia', 'South America', 'Eastern Africa', 'Western Africa', 'Eastern Europe', 'Western Asia', 'Northern Africa', 'Western Europe', 'Central America', 'Middle Africa', 'Southern Europe', 'Northern Europe', 'Central Asia', 'Southern Africa', 'South Africa', 'OCEANIA']
+                        const countries = [];
+                        const country = this.props.countries.map((list, i) => {
+                            if (!_.includes(ignore, list)) {
+                                const obj = { country: list, population: results[i].data.total_population.population }
+                                countries.push(obj)
+                            }
+                        });
+                        this.props.getInfo(countries);
                     }
-                });
-                this.props.getInfo(countries);
-            }
-        )}
+                )
+        }, 500);
+    }
 
     showChart= (country) =>{
         var today = new Date();

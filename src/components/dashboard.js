@@ -17,41 +17,41 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount(){
-       this.getHighest();
+        this.getHighest();
         this.mostMales();
     }
 
-    getHighest = () =>{
-        const all = this.props.population;
-        const top = all.sort(function (a, b) {
-            return b.population - a.population;
-        }).filter((item, i)=>{
-            return i<10
-        })
-        const names = top.map(item => item.country);
-        const numbers = top.map(item =>item.population);
-        this.setState({
-            chartData: {
-                labels: names,
-                datasets: [
-                    {
-                        data: numbers,
-                        backgroundColor: [
-                            'rgba(10, 99, 244, 0.6)',
-                            'rgba(20, 99, 132, 0.6)',
-                            'rgba(124, 99, 132, 0.6)',
-                            'rgba(6, 244, 45, 0.6)',
-                            'rgba(78, 99, 132, 0.6)',
-                            'rgba(42, 99, 55, 0.6)',
-                            'rgba(25, 19, 132, 0.6)',
-                            'rgba(188, 99, 132, 0.6)',
-                            'rgba(9, 99, 255, 0.6)',
-                            'rgba(20, 162, 42, 0.6)'
-                        ]
-                    }
-                ]
-            }, top: top
-        })
+    getHighest (){
+            const all = this.props.population;
+            const top = all.sort(function (a, b) {
+                return b.population - a.population;
+            }).filter((item, i) => {
+                return i < 10
+            })
+            const names = top.map(item => item.country);
+            const numbers = top.map(item => item.population);
+            this.setState({
+                chartData: {
+                    labels: names,
+                    datasets: [
+                        {
+                            data: numbers,
+                            backgroundColor: [
+                                'rgba(10, 99, 244, 0.6)',
+                                'rgba(20, 99, 132, 0.6)',
+                                'rgba(124, 99, 132, 0.6)',
+                                'rgba(6, 244, 45, 0.6)',
+                                'rgba(78, 99, 132, 0.6)',
+                                'rgba(42, 99, 55, 0.6)',
+                                'rgba(25, 19, 132, 0.6)',
+                                'rgba(188, 99, 132, 0.6)',
+                                'rgba(9, 99, 255, 0.6)',
+                                'rgba(20, 162, 42, 0.6)'
+                            ]
+                        }
+                    ]
+                }, top: top
+            })
     }
 
     mostMales = () =>{
