@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
@@ -10,11 +9,9 @@ import thunk from "redux-thunk";
 
 
 import countriesReducer from './reducers/countriesReducer';
-import populationReducer from './reducers/populationReducer';
 
 const rootReducer = combineReducers({
-    countries: countriesReducer,
-    population: populationReducer
+    countries: countriesReducer
 })
 
 

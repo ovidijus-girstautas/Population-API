@@ -3,10 +3,6 @@ import * as actions from '../actions/countries';
 import axios from 'axios';
 import { connect } from "react-redux";
 import { Bar } from 'react-chartjs-2';
-import _ from 'lodash';
-
-
-
 
 class Dashboard extends React.Component {
 
@@ -22,7 +18,7 @@ class Dashboard extends React.Component {
     }
 
     getHighest (){
-            const all = this.props.population;
+            const all = this.props.countries;
             const top = all.sort(function (a, b) {
                 return b.population - a.population;
             }).filter((item, i) => {
@@ -57,25 +53,14 @@ class Dashboard extends React.Component {
     mostMales = () =>{
         var today = new Date();
         var year = today.getFullYear();
-        const ignore = ['ASIA', 'AFRICA', 'EUROPE', 'World', "Less developed regions", "Less developed regions, excluding China", "Less developed regions, excluding least developed countries", 'Least developed countries', 'More developed regions', 'LATIN AMERICA AND THE CARIBBEAN', 'NORTHERN AMERICA', 'South-Central Asia', 'Southern Asia', 'Eastern Asia', 'Sub-Saharan Africa', 'South-Eastern Asia', 'South America', 'Eastern Africa', 'Western Africa', 'Eastern Europe', 'Western Asia', 'Northern Africa', 'Western Europe', 'Central America', 'Middle Africa', 'Southern Europe', 'Northern Europe', 'Central Asia', 'Southern Africa', 'South Africa', 'OCEANIA']
-
-        const filtered = [];
-
-        const filteredCountries = this.props.countries.map(country => {
-            if (!_.includes(ignore, country)) {
-                const obj = {country: country}
-                return filtered.push(obj)
-            }
-        })
-
+        const all = this.props.countries; 
 
         const countryBySex = [];
 
-        let promiseArray = filtered.map(country => axios.get('http://api.population.io/1.0/population/' + year + '/' + country.country + '/'))
+        let promiseArray = all.map((country, i) => axios.get('http://api.population.io/1.0/population/' + year + '/' + all[i].country + '/'))
         Promise.all(promiseArray)
             .then(
                 results => {
-
                     for(let x = 0; x<results.length; x++){
                         const females = results[x].data.reduce((total, data) => {
                             return total + data.females

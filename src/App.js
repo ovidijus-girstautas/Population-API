@@ -22,6 +22,7 @@ class App extends React.Component {
     const menu = this.state.menu.map((menu, i)=>{
       return(
         <li 
+          className={this.state.active === menu ? 'active' : null}
           onClick={()=>this.changeComponent(menu)}
           key={i}>
           {menu}
