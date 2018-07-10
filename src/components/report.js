@@ -1,110 +1,142 @@
 import React from 'react';
 import * as actions from '../actions/countries';
 import { connect } from "react-redux";
-import axios from 'axios';
-import { Pie} from 'react-chartjs-2';
+import ReactTable from "react-table";
+import matchSorter from 'match-sorter';
+import Popup from '../components/popup';
+import "react-table/react-table.css";
 
 
 class Report extends React.Component {
 
     state={
         active: '',
-        country: ''
+        country: '',
+        updated: false,
+        show: false
     }
 
     componentDidMount(){
-        this.props.fetchCountryList();
+        if(!this.props.countries.length && this.props.location.pathname === "/Report"){
+            this.props.fetchCountryList()
+        } else if (this.props.countries.length > 0 && this.props.location.pathname !== "/Report"){
+        } else {
+            this.props.fetchCountryList()
+        }
     }
 
-    showChart= (country) =>{
-        var today = new Date();
-        var year = today.getFullYear();
-        axios.get('http://api.population.io/1.0/population/'+year+'/'+country+'/')
-        .then(response=>{
-            const females = response.data.reduce((total, data) => {
-                return total + data.females
-            }, 0);
-            const males = response.data.reduce((total, data) => {
-                return total + data.males
-            }, 0);
-            this.setState({
-                country: response.data[0].country,
-                chartData: {
-                    labels: ['Females', 'Males'],
-                    datasets: [
-                        {
-                            data: [
-                                females, males
-                            ],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(20, 162, 235, 0.6)'
-                            ],
-                            borderColor: [
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
-                        }
-                    ]
-                }
+    componentDidUpdate() {
+        if (this.props.location.pathname !== "/Report" && this.props.countries.length > 0 && this.state.updated === false) {
+            this.props.countries.sort((country) => {
+                return country.country === this.props.match.params.country
+            }).forEach(country =>{
+                this.setState({
+                    country: country.country,
+                    chartData: {
+                        labels: ['Females', 'Males'],
+                        datasets: [
+                            {
+                                data: [
+                                    country.femalePopulation, country.malePopulation
+                                ],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.6)',
+                                    'rgba(20, 162, 235, 0.6)'
+                                ],
+                                borderColor: [
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                            }
+                        ]
+                    },
+                    show: true,
+                    updated: true
+                })
             })
-        })
+        }
     }
     
-
+    hideTable =()=>{
+        this.setState(prevState => ({
+            show: false
+        }));
+    }
 
 
     render() {     
-        
-        const countries = this.props.countries.map((country, i)=>{
-            return(
-                <tr key={country.country}>
-                    <td  onClick={() => { this.showChart(country.country) }}> {country.country}</td>
-                    <td>{country.population}</td>
-                </tr>
-            )
-        });
-        
+
         return (
-            <div className='wrapper'>                
-                {this.props.countries.length > 1 ? <div className='main'>
-                    <div className='container'>
-                        <table>
-                            <tbody>
-                            <tr>
-                                <th onClick={() => { this.props.sortByName() }}>Country</th>
-                                <th onClick={() => { this.props.sortByPopulation() }}>Population</th>
-                            </tr>
-                            {countries}
-                            </tbody>
-                        </table>
-                    </div>
-                </div> : null}
-                {this.state.country ? <div className='chart'>
-                    <Pie
+            <div className="main">
+                <ReactTable
+                    data={this.props.countries}
+                    filterable
+                    columns={[
+                        {
+                            Header: "Country",
+                            accessor: "country",
+                            filterMethod: (filter, rows) =>
+                                matchSorter(rows, filter.value, { keys: ["country"] }),
+                            filterAll: true,
+
+                        },
+                        {
+                            Header: "Population",
+                            accessor: "totalPopulation",
+                            filterable: false
+                        }
+                    ]}
+                    defaultPageSize={25}
+                    className="-striped -highlight"
+                    getTdProps={(state, rowInfo) => {
+                        return {
+                            onClick: (e, handleOriginal) => {
+                                this.props.history.push(`/Report/${rowInfo.original.country}`)
+                                this.setState({
+                                    country: rowInfo.original.country,
+                                    chartData: {
+                                        labels: ['Females', 'Males'],
+                                        datasets: [
+                                            {
+                                                data: [
+                                                    rowInfo.original.femalePopulation, rowInfo.original.malePopulation
+                                                ],
+                                                backgroundColor: [
+                                                    'rgba(255, 99, 132, 0.6)',
+                                                    'rgba(20, 162, 235, 0.6)'
+                                                ],
+                                                borderColor: [
+                                                    'rgba(153, 102, 255, 1)',
+                                                    'rgba(255, 159, 64, 1)'
+                                                ],
+                                            }
+                                        ]
+                                    },
+                                    show: true
+                                })
+
+                                if (handleOriginal) {
+                                    handleOriginal();
+                                }
+                            }
+                        };
+                    }}
+                />
+                {this.state.show === true ?
+                <div className='container'>
+                    <Popup
+                        country={this.state.country}
+                        hideTable={this.hideTable}
                         data={this.state.chartData}
-                        height={500}
-                        options={{
-                            title: {
-                                display: true,
-                                text: this.state.country +' - Population by gender',
-                                fontSize: 15,
-                                fontColor: 'white'
-                            },
-                            responsive: true,
-                            maintainAspectRatio: false
-                        }}
-                    />
-                </div> : null}
+                        /> </div>: null}
             </div>
-        );
+        )
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        countries: state.countries,
-        population: state.population
+        countries: state.countries
     }
 };
 

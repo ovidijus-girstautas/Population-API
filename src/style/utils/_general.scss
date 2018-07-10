@@ -5,5 +5,27 @@ table {
 }
 
 .active{
-    background-color: rgb(80, 62, 62);
+    background-color: #20a8d8;
+}
+
+h4{
+    font-size: 1rem;
+    font-weight: 900;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.row{
+   display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px; 
+}
+
+.card-body{
+    flex: 1 1 auto;
+    padding: 1.25rem;
 }

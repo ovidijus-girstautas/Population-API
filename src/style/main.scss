@@ -1,8 +1,9 @@
 @import "base/reset";
 
-@import "utils/header";
 @import "utils/general";
 @import "utils/mixins";
+@import "utils/loader";
 
 @import "components/report";
 @import "components/dashboard";
+@import "components/app";

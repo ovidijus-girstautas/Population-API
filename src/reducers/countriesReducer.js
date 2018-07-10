@@ -18,7 +18,7 @@ const countries = (state = [], action) => {
             });
         case 'SORT_BY_POPULATION':
             return state.slice().sort(function (a, b) {
-                return b.population - a.population;
+                return b.totalPopulation - a.totalPopulation;
             });
         default: return state
     }

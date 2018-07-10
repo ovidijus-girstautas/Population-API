@@ -1,0 +1,79 @@
+.App{
+    display: flex;
+
+    .sidebar{
+        position: fixed;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        padding: 0;
+        color: #fff;
+        background: #2f353a;
+        @include for-phone-only{
+            display: block;
+            width: 100%;
+            z-index: 999;
+        }
+            .sidebar-nav{
+                position: relative;
+                -ms-flex: 1;
+                flex: 1;
+                overflow-x: hidden;
+                overflow-y: auto;
+                width: 200px;
+                @include for-phone-only{
+                    display: block;
+                    width: auto;
+                }
+                ul{
+                    
+                }
+                .nav {
+                width: 200px;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                height:100vh;
+                padding: 0;
+                @include for-phone-only{
+                    display: flex;
+                    justify-content: space-between;
+                    flex-direction: row;
+                    width: 100px;
+                    height: auto;
+                }
+                .nav-item {
+                    @include for-phone-only{
+                    display: inline-block;
+                }
+                    cursor: pointer;
+                    width: 100%;
+                    position: relative;
+                    margin: 0;
+                    transition: background .3s ease-in-out;
+                    display: block;
+                    padding: 0.75rem 1rem;
+                    color: #fff;
+                    text-decoration: none;
+                    background: transparent;
+                    font-size: 0.875rem;
+                    &:hover {
+                        color: #fff;
+                        background: #20a8d8;
+                    }
+                    a{
+                        @include for-phone-only{
+                            display: inline-block;
+                        }
+                    }
+                    li{
+                        font-size: 20px;
+                        @include for-phone-only{
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

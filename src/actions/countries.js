@@ -4,6 +4,8 @@ import _ from "lodash";
 export function fetchCountryList() {
     return async function (dispatch) {
         const countries = [];
+        const population = [];
+        const allCountries = [];
         try{
             axios.get('http://api.population.io/1.0/countries')
                 .then((response) => {
@@ -31,16 +33,36 @@ export function fetchCountryList() {
                     }
                     axios.all(promises)
                     .then(results=>{
-                        const population = [];
                         results.forEach((item, i)=>{
-                            const object = {country: countries[i].country, population: item.data.total_population.population}
+                            const object = {population: item.data.total_population.population}
                             population.push(object);
                         })
-                        dispatch({
-                            type: 'GET_COUNTRIES',
-                            payload: population
-                        })
                     })
+                    .then(results=>{
+                        var today = new Date();
+                        var year = today.getFullYear();
+
+                        let promiseArray = countries.map((country, i) => axios.get('http://api.population.io/1.0/population/' + year + '/' + countries[i].country + '/'))
+                        Promise.all(promiseArray)
+                            .then(
+                                results => {
+                                    for (let x = 0; x < results.length; x++) {
+                                        const females = results[x].data.reduce((total, data) => {
+                                            return total + data.females
+                                        }, 0)
+                                        const males = results[x].data.reduce((total, data) => {
+                                            return total + data.males
+                                        }, 0)
+                                        const obj = {country: countries[x].country, totalPopulation: population[x].population, femalePopulation: females, malePopulation: males, disparity: females / males }
+                                        allCountries.push(obj)
+                                    }
+                                    dispatch({
+                                        type: 'GET_COUNTRIES',
+                                        payload: allCountries
+                                     })
+                                }
+                            )
+                    })        
                 })
             } catch (err) {
             console.log('try failed');
