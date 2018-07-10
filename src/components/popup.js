@@ -7,9 +7,7 @@ class Popup extends React.Component {
         this.props.hideTable()
     };
     render() {
-        return (
-            <div className='main'>
-                
+        return (                
                     <div className='chart'>
                         <h1>{this.props.country}</h1>
                         <span onClick={() => this.props.hideTable()}>x</span>
@@ -33,7 +31,6 @@ class Popup extends React.Component {
                             />
                         </div>
                     </div>
-            </div>
         );
     }
 }
